@@ -1,0 +1,23 @@
+.status-cell {
+    text-align: center !important;
+    font-weight: bold !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    /* Override del background-color default della tabella */
+    background-color: inherit !important;
+}
+
+.status-todo {
+    background-color: #ffcdd2 !important;
+    color: #c62828 !important;
+}
+
+.status-doing {
+    background-color: #fff59d !important;
+    color: #f57f17 !important;
+}
+
+.status-done {
+    background-color: #c8e6c9 !important;
+    color: #2e7d32 !important;
+}

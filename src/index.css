@@ -9,3 +9,40 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
+/* Contenitore principale */
+.task-list-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: sans-serif;
+  background-color: #ffffff;
+}
+
+/* Tabella */
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+}
+
+/* Intestazioni */
+.task-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Celle */
+.task-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+  background-color: #ffffff;
+  /* Sfondo uniforme */
+}
