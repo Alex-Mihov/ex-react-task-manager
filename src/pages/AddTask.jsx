@@ -1,40 +1,37 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useContext, useMemo } from 'react'
+import { GlobalContext } from '../GlobalContext'
 
-const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
+
 
 function AddTask() {
-    const [title, setTitle] = useState('')
-    const [titleError, setTitleError] = useState('')
+    const [inputTitle, setInputTitle] = useState('')
     const descriptionRef = useRef()
     const statusRef = useRef()
 
-    const validateTitle = (value) => {
-        if (!value.trim()) {
-            setTitleError('Il campo nome non può essere vuoto')
-            return false
-        }
+    const { addTask } = useContext(GlobalContext)
 
-        if ([...value].some(char => symbols.includes(char))) {
-            setTitleError('Il campo nome non può contenere simboli speciali')
-            return false
-        }
-
-        setTitleError('')
-        return true
-    }
+    const errorHandler = useMemo(() => {
+        const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
+        const isIncludes = inputTitle.split('').some(letter => symbols.includes(letter))
+        if (isIncludes) return 'Il nome deve includere solo caratteri alfanumerici'
+        if (!inputTitle.trim()) return 'Il campo non può essere vuoto'
+    }, [inputTitle])
 
     const handleTitleChange = (e) => {
         const newValue = e.target.value
-        setTitle(newValue)
-        validateTitle(newValue)
+        setInputTitle(newValue)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (!validateTitle(title)) {
-            return
+        if (errorHandler) {
+            return;
         }
-
+        addTask({
+            title: inputTitle,
+            description: descriptionRef.current.value,
+            status: statusRef.current.value
+        })
     }
 
     return (
@@ -46,12 +43,12 @@ function AddTask() {
                     <input
                         type="text"
                         id="title"
-                        value={title}
+                        value={inputTitle}
                         onChange={handleTitleChange}
-                        className={titleError ? 'invalid' : ''}
+                        className={errorHandler ? 'invalid' : ''}
                         required
                     />
-                    {titleError && <span className="error-message">{titleError}</span>}
+                    {errorHandler && <span className="error-message">{errorHandler}</span>}
                 </div>
 
                 <div className="form-group">
