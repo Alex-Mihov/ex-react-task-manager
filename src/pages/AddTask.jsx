@@ -32,6 +32,7 @@ function AddTask() {
             title: inputTitle.trim(),
             description: descriptionRef.current.value,
             status: statusRef.current.value
+
         }
 
         console.log('New Task:', newTask)
