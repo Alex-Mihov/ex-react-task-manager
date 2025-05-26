@@ -46,3 +46,28 @@
   background-color: #ffffff;
   /* Sfondo uniforme */
 }
+
+.invalid {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff8f8;
+  outline: none;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 4px;
+  display: block;
+  /* Ensure message takes full width */
+}
+
+/* Debug outline for form groups */
+.form-group {
+  border: 1px solid transparent;
+  padding: 8px;
+}
+
+.form-group:focus-within {
+  border-color: #e0e0e0;
+  background-color: #fafafa;
+}

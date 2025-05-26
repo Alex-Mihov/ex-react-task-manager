@@ -1,13 +1,39 @@
 import { useState, useRef } from 'react'
 
+const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
 
 function AddTask() {
     const [title, setTitle] = useState('')
+    const [titleError, setTitleError] = useState('')
     const descriptionRef = useRef()
     const statusRef = useRef()
 
+    const validateTitle = (value) => {
+        if (!value.trim()) {
+            setTitleError('Il campo nome non può essere vuoto')
+            return false
+        }
+
+        if ([...value].some(char => symbols.includes(char))) {
+            setTitleError('Il campo nome non può contenere simboli speciali')
+            return false
+        }
+
+        setTitleError('')
+        return true
+    }
+
+    const handleTitleChange = (e) => {
+        const newValue = e.target.value
+        setTitle(newValue)
+        validateTitle(newValue)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (!validateTitle(title)) {
+            return
+        }
 
     }
 
@@ -21,9 +47,11 @@ function AddTask() {
                         type="text"
                         id="title"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={handleTitleChange}
+                        className={titleError ? 'invalid' : ''}
                         required
                     />
+                    {titleError && <span className="error-message">{titleError}</span>}
                 </div>
 
                 <div className="form-group">
