@@ -20,5 +20,22 @@ export function useTasks() {
         fetchTasks()
     }, [])
 
-    return { tasks }
+    const addTask = async (task) => {
+
+    }
+
+    const removeTask = async (taskId) => {
+
+    }
+
+    const updateTask = async (taskId, updatedTask) => {
+
+    }
+
+    return {
+        tasks,
+        addTask,
+        removeTask,
+        updateTask
+    }
 }
