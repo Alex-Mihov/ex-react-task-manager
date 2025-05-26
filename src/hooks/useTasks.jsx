@@ -12,6 +12,8 @@ export function useTasks() {
                 }
                 const data = await response.json()
                 setTasks(data)
+                console.log(data);
+
             } catch (error) {
                 console.error('Error fetching tasks:', error)
             }
@@ -32,8 +34,10 @@ export function useTasks() {
 
     }
 
+
     return {
         tasks,
+        setTasks,
         addTask,
         removeTask,
         updateTask
