@@ -1,7 +1,9 @@
 import { useState, useRef, useContext, useMemo } from 'react'
 import { GlobalContext } from '../GlobalContext'
 
-
+//IMPORTO TOAST ALERT
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AddTask() {
     const [inputTitle, setInputTitle] = useState('')
@@ -22,7 +24,7 @@ function AddTask() {
         setInputTitle(newValue)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         if (errorHandler) {
             return
@@ -32,10 +34,23 @@ function AddTask() {
             title: inputTitle.trim(),
             description: descriptionRef.current.value,
             status: statusRef.current.value
-
         }
 
-        console.log('New Task:', newTask)
+        try {
+            const createdTask = await addTask(newTask)
+
+            // Success alert
+            toast.success('Task creata con successo!')
+
+            // Reset form
+            setInputTitle('')
+            descriptionRef.current.value = ''
+            statusRef.current.value = 'To do'
+
+        } catch (error) {
+            // Error alert
+            toast.error(`Errore: ${error.message}`)
+        }
     }
 
     return (

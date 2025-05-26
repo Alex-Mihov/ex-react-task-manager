@@ -23,7 +23,28 @@ export function useTasks(url) {
     }, [])
 
     const addTask = async (task) => {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(task)
+            })
 
+            const data = await response.json()
+
+            if (!data.success) {
+                throw new Error(data.message)
+            }
+
+            setTasks(prevTasks => [...prevTasks, data.task])
+            return data.task
+
+        } catch (error) {
+            console.error('Error adding task:', error)
+            throw error
+        }
     }
 
     const removeTask = async (taskId) => {
