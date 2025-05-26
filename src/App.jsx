@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import TaskList from './pages/TaskList'
 import AddTask from './pages/AddTask'
 
+
 function App() {
   return (
     <BrowserRouter>
