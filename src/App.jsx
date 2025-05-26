@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import TaskList from './pages/TaskList'
 import AddTask from './pages/AddTask'
+import TaskDetail from './pages/TaskDetail'
 
 //IMPORTO TOAST ALERT
 import { ToastContainer } from 'react-toastify';
@@ -33,6 +34,7 @@ function App() {
             <Routes>
               <Route path="/" element={<TaskList />} />
               <Route path="/add" element={<AddTask />} />
+              <Route path="/task/:id" element={<TaskDetail />} />
             </Routes>
           </div>
         </BrowserRouter>
