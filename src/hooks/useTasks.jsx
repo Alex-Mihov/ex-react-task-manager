@@ -1,0 +1,24 @@
+import { useState, useEffect } from 'react'
+
+export function useTasks() {
+    const [tasks, setTasks] = useState([])
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+                const data = await response.json()
+                setTasks(data)
+            } catch (error) {
+                console.error('Error fetching tasks:', error)
+            }
+        }
+
+        fetchTasks()
+    }, [])
+
+    return { tasks }
+}
