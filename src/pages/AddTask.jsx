@@ -25,13 +25,16 @@ function AddTask() {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (errorHandler) {
-            return;
+            return
         }
-        addTask({
-            title: inputTitle,
+
+        const newTask = {
+            title: inputTitle.trim(),
             description: descriptionRef.current.value,
             status: statusRef.current.value
-        })
+        }
+
+        console.log('New Task:', newTask)
     }
 
     return (
