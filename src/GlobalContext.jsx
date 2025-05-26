@@ -6,7 +6,7 @@ export const GlobalContext = createContext()
 
 // Provider component
 export function GlobalProvider({ children }) {
-    const { tasks, addTask, removeTask, updateTask } = useTasks()
+    const { tasks, addTask, removeTask, updateTask } = useTasks(`${import.meta.env.VITE_API_URL}/tasks`)
 
     // Valori da condividere nel contesto
     const value = {

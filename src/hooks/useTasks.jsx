@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 
-export function useTasks() {
+export function useTasks(url) {
     const [tasks, setTasks] = useState([])
 
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`)
+                const response = await fetch(url)
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`)
                 }
