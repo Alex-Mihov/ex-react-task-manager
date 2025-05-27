@@ -1,35 +1,42 @@
 import { useState, useRef, useContext, useMemo } from 'react'
 import { GlobalContext } from '../GlobalContext'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-//IMPORTO TOAST ALERT
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+// Componente per l'aggiunta di nuovi task
 function AddTask() {
-    const [inputTitle, setInputTitle] = useState('')
-    const descriptionRef = useRef()
-    const statusRef = useRef()
+    // Stati e riferimenti
+    const [inputTitle, setInputTitle] = useState('')      // Stato per il titolo del task
+    const descriptionRef = useRef()                       // Ref per il campo descrizione
+    const statusRef = useRef()                           // Ref per il campo stato
 
+    // Accesso alla funzione addTask dal contesto globale
     const { addTask } = useContext(GlobalContext)
 
+    // Validazione del titolo - Memorizzata con useMemo per ottimizzare le performance
     const errorHandler = useMemo(() => {
-        const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
+        const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~"
+        // Verifica se il titolo contiene caratteri speciali
         const isIncludes = inputTitle.split('').some(letter => symbols.includes(letter))
         if (isIncludes) return 'Il nome deve includere solo caratteri alfanumerici'
         if (!inputTitle.trim()) return 'Il campo non può essere vuoto'
-    }, [inputTitle])
+    }, [inputTitle]) // Si aggiorna solo quando cambia inputTitle
 
+    // Gestisce i cambiamenti nel campo del titolo
     const handleTitleChange = (e) => {
         const newValue = e.target.value
         setInputTitle(newValue)
     }
 
+    // Gestisce l'invio del form
     const handleSubmit = async (e) => {
         e.preventDefault()
+        // Se ci sono errori di validazione, interrompe l'invio
         if (errorHandler) {
             return
         }
 
+        // Crea l'oggetto task con i valori del form
         const newTask = {
             title: inputTitle.trim(),
             description: descriptionRef.current.value,
@@ -37,18 +44,19 @@ function AddTask() {
         }
 
         try {
-            const createdTask = await addTask(newTask)
+            // Tenta di creare il nuovo task
+            await addTask(newTask)
 
-            // Success alert
+            // Mostra notifica di successo
             toast.success('Task creata con successo!')
 
-            // Reset form
+            // Reset del form
             setInputTitle('')
             descriptionRef.current.value = ''
             statusRef.current.value = 'To do'
 
         } catch (error) {
-            // Error alert
+            // Mostra notifica di errore
             toast.error(`Errore: ${error.message}`)
         }
     }
@@ -57,6 +65,7 @@ function AddTask() {
         <div className="add-task-container">
             <h2>Aggiungi Nuovo Task</h2>
             <form onSubmit={handleSubmit} className="add-task-form">
+                {/* Campo per il titolo con validazione */}
                 <div className="form-group">
                     <label htmlFor="title">Nome del task:</label>
                     <input
@@ -67,9 +76,11 @@ function AddTask() {
                         className={errorHandler ? 'invalid' : ''}
                         required
                     />
+                    {/* Messaggio di errore per la validazione */}
                     {errorHandler && <span className="error-message">{errorHandler}</span>}
                 </div>
 
+                {/* Campo per la descrizione */}
                 <div className="form-group">
                     <label htmlFor="description">Descrizione:</label>
                     <textarea
@@ -79,6 +90,7 @@ function AddTask() {
                     />
                 </div>
 
+                {/* Selezione dello stato */}
                 <div className="form-group">
                     <label htmlFor="status">Stato:</label>
                     <select
