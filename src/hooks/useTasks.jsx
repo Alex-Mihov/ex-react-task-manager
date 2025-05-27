@@ -68,7 +68,32 @@ export function useTasks(url) {
     }
 
     const updateTask = async (taskId, updatedTask) => {
+        try {
+            const response = await fetch(`${url}/${taskId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedTask)
+            })
 
+            const data = await response.json()
+
+            if (!data.success) {
+                throw new Error(data.message)
+            }
+
+            setTasks(prevTasks =>
+                prevTasks.map(task =>
+                    task.id === taskId ? data.task : task
+                )
+            )
+
+            return data.task
+
+        } catch (error) {
+            throw error
+        }
     }
 
 
