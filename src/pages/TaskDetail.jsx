@@ -1,9 +1,11 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../GlobalContext'
 import { toast } from 'react-toastify'
+import Modal from '../components/Modal'
 
 export default function TaskDetail() {
+    const [showModal, setShowModal] = useState(false)
     const { id } = useParams()
     const navigate = useNavigate()
     const { tasks, removeTask } = useContext(GlobalContext)
@@ -43,12 +45,24 @@ export default function TaskDetail() {
                 <p>{new Date(task.createdAt).toLocaleDateString()}</p>
 
                 <button
-                    onClick={handleDelete}
+                    onClick={() => setShowModal(true)}
                     className="delete-button"
                 >
                     Elimina Task
                 </button>
             </div>
+
+            <Modal
+                title="Conferma eliminazione"
+                content={`Sei sicuro di voler eliminare il task "${task.title}"?`}
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                onConfirm={() => {
+                    handleDelete()
+                    setShowModal(false)
+                }}
+                confirmText="Elimina"
+            />
         </div>
     )
 }
