@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { GlobalContext } from '../GlobalContext'
 import TaskRow from '../components/TaskRow'
 
@@ -7,6 +7,12 @@ import TaskRow from '../components/TaskRow'
 function TaskList() {
     // Ottiene l'array dei task dal contesto globale usando destructuring
     const { tasks } = useContext(GlobalContext)
+    console.log(tasks);
+
+
+    const [sortBy, setSortBy] = useState("createdAt")
+    const [sortOrder, setSortOrder] = useState(1)
+
 
     // Se i task non sono ancora stati caricati, mostra un messaggio di caricamento
     if (!tasks) {
@@ -22,7 +28,7 @@ function TaskList() {
                 {/* Intestazione della tabella */}
                 <thead>
                     <tr>
-                        <th>Nome</th>
+                        <th onClick={() => sortOrder === 1 ? -1 : 1}>Nome</th>
                         <th>Stato</th>
                         <th>Data di Creazione</th>
                     </tr>
