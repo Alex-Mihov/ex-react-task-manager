@@ -48,7 +48,23 @@ export function useTasks(url) {
     }
 
     const removeTask = async (taskId) => {
+        try {
+            const response = await fetch(`${url}/${taskId}`, {
+                method: 'DELETE',
+            })
 
+            const data = await response.json()
+
+            if (!data.success) {
+                throw new Error(data.message)
+            }
+
+
+            setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId))
+
+        } catch (error) {
+            throw error
+        }
     }
 
     const updateTask = async (taskId, updatedTask) => {

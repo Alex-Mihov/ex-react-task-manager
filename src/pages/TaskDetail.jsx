@@ -1,10 +1,12 @@
 import { useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { GlobalContext } from '../GlobalContext'
+import { toast } from 'react-toastify'
 
 export default function TaskDetail() {
     const { id } = useParams()
-    const { tasks } = useContext(GlobalContext)
+    const navigate = useNavigate()
+    const { tasks, removeTask } = useContext(GlobalContext)
 
     const task = tasks.find(t => t.id === parseInt(id))
 
@@ -12,8 +14,14 @@ export default function TaskDetail() {
         return <div>Task non trovato</div>
     }
 
-    const handleDelete = () => {
-        console.log('Elimino task:', task.id)
+    const handleDelete = async () => {
+        try {
+            await removeTask(task.id)
+            toast.success('Task eliminato con successo')
+            navigate('/')
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     return (
