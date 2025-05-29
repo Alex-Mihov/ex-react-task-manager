@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useMemo, useState, useCallback } from 'react'
 import { GlobalContext } from '../GlobalContext'
 import TaskRow from '../components/TaskRow'
 
@@ -14,6 +14,7 @@ function TaskList() {
     // sortOrder: direzione dell'ordinamento (1 = ascendente, -1 = discendente)
     const [sortBy, setSortBy] = useState("createdAt")
     const [sortOrder, setSortOrder] = useState(1)
+    const [searchQuery, setSearchQuery] = useState("") // Stato per la query di ricerca
 
     // Icona che indica la direzione dell'ordinamento
     const sortIcon = sortOrder === 1 ? "↓" : "↑"
@@ -32,37 +33,37 @@ function TaskList() {
 
     // useMemo per memorizzare e ricalcolare la lista ordinata solo quando necessario
     const sortedTasks = useMemo(() => {
-        // Creo una copia dell'array per non modificare l'originale
-        return [...tasks].sort((a, b) => {
-            let comparison
+        // 1. Filtraggio: filtra i task in base alla query di ricerca (case insensitive)
+        const filteredTasks = tasks.filter(task =>
+            task.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
-            // Logica di ordinamento per titolo
+        // 2. Ordinamento: ordina i task filtrati in base al campo selezionato
+        return [...filteredTasks].sort((a, b) => {
+            let comparison = 0;
+
+            // Ordinamento per titolo (case insensitive)
             if (sortBy === "title") {
-                // Uso localeCompare per confrontare stringhe
-                comparison = a.title.localeCompare(b.title)
+                comparison = a.title.toLowerCase().localeCompare(b.title.toLowerCase());
             }
-            // Logica di ordinamento per stato
+            // Ordinamento per stato
             else if (sortBy === "status") {
-                // Definisco l'ordine degli stati
-                const statusOptions = ["To do", "Doing", "Done"]
-                // Trovo l'indice di ciascuno stato nell'array di opzioni
-                const indexA = statusOptions.indexOf(a.status)
-                const indexb = statusOptions.indexOf(b.status)
-                // Confronto gli indici
-                comparison = indexA - indexb
+                const statusOrder = ["To do", "Doing", "Done"];
+                const indexA = statusOrder.indexOf(a.status);
+                const indexB = statusOrder.indexOf(b.status);
+                comparison = indexA - indexB;
             }
-            // Logica di ordinamento per data di creazione
+            // Ordinamento per data di creazione
             else if (sortBy === "createdAt") {
-                // Converto le date in timestamp per confrontarle
-                const dateA = new Date(a.createdAt).getTime()
-                const dateB = new Date(b.createdAt).getTime()
-                comparison = dateA - dateB
+                const dateA = new Date(a.createdAt).getTime();
+                const dateB = new Date(b.createdAt).getTime();
+                comparison = dateA - dateB;
             }
 
-            // Moltiplico per sortOrder per invertire l'ordinamento se necessario
-            return comparison * sortOrder
-        })
-    }, [tasks, sortBy, sortOrder]) // Ricalcola solo se questi valori cambiano
+            // Applica la direzione dell'ordinamento
+            return comparison * sortOrder;
+        });
+    }, [tasks, sortBy, sortOrder, searchQuery]); // Dipendenze del memo
 
 
     // Gestione dello stato di caricamento
@@ -70,10 +71,27 @@ function TaskList() {
         return <div>Caricamento...</div>
     }
 
+    // Funzione di debounce per la ricerca
+    const debouncedSearch = useCallback((value) => {
+        clearTimeout(window.searchTimer);
+        window.searchTimer = setTimeout(() => {
+            setSearchQuery(value);
+        }, 300); // Ritardo di 300ms
+    }, []); // Nessuna dipendenza perché vogliamo che la funzione rimanga stabile
+
     // Rendering della tabella dei task
     return (
         <div className="task-list-container">
             <h2>Elenco Task</h2>
+            {/* Input di ricerca */}
+            <div className="search-container">
+                <input
+                    type="text"
+                    placeholder="Cerca task..."
+                    onChange={(e) => debouncedSearch(e.target.value)}
+                    className="search-input"
+                />
+            </div>
             {/* Tabella per visualizzare i task in modo strutturato */}
             <table className="task-table">
                 {/* Intestazione della tabella */}
